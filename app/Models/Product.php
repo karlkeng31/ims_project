@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\TaxType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -29,10 +32,9 @@ class Product extends Model
         'updated_at'
     ];
 
-    /* protected $casts = [
+    protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'tax_type' => TaxType::class
     ];
 
     public function getRouteKeyName(): string
@@ -50,7 +52,7 @@ class Product extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    protected function buyingPrice(): Attribute
+    /* protected function buyingPrice(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,

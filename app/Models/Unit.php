@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Category extends Model
+class Unit extends Model
 {
     use HasFactory;
 
@@ -27,13 +27,14 @@ class Category extends Model
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class, 'category_id', 'id');
+        return $this->hasMany(Product::class);
     }
 
     /* public function scopeSearch($query, $value): void
     {
         $query->where('name', 'like', "%{$value}%")
-            ->orWhere('slug', 'like', "%{$value}%");
+            ->orWhere('slug', 'like', "%{$value}%")
+            ->orWhere('short_code', 'like', "%{$value}%");
     }
 
     public function getRouteKeyName(): string
