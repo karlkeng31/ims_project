@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use BladeUI\Icons\Components\Icon;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -17,6 +18,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
@@ -35,12 +37,20 @@ class AdminPanelProvider extends PanelProvider
             ->font('Source Code Pro', provider: GoogleFontProvider::class)
             ->brandLogo(asset('/logo.png'))
             ->brandLogoHeight('5rem')
+            ->darkMode(false)
+            ->sidebarCollapsibleOnDesktop()
+            /* ->databaseNotifications() */
             ->defaultThemeMode(ThemeMode::Light)
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Settings')
+                    ->icon('heroicon-o-cog-8-tooth')
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
+            /* ->pages([
                 Pages\Dashboard::class,
-            ])
+            ]) */
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
