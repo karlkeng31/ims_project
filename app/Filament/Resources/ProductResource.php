@@ -2,90 +2,111 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Product;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Forms\Components\FileUpload;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\Placeholder;
 use App\Filament\Resources\ProductResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Category;
-use App\Models\Unit;
-use Illuminate\Database\Eloquent\Factories\Relationship;
+use App\Models\Product;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-swatch';
-    protected static ?string $activeNavigationIcon = 'heroicon-s-swatch';
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                FileUpload::make('image')
-                    ->image()
-                    ->imageEditor()
-                    ->imageEditorAspectRatios([
-                        '16:9',
-                        '4:3',
-                        '1:1',
-                    ]),
-                TextInput::make('name')->placeholder('Product'),
-                Select::make('category_id')
+                Forms\Components\Select::make('category_id')
                     ->relationship('category', 'name'),
-                Select::make('unit_id')
-                    ->relationship('unit', 'name'),
-                TextInput::make('buying_price')->numeric()->placeholder('0'),
-                TextInput::make('selling_price')->numeric()->placeholder('0'),
-                TextInput::make('quantity')->numeric()->placeholder('0'),
-                TextInput::make('quantity_alert')->numeric()->placeholder('0'),
-                /* TextInput::make('tax'),
-                Select::make('tax_type')
-                    ->options([
-                        'draft' => 'Draft',
-                        'reviewing' => 'Reviewing',
-                        'published' => 'Published',
-                    ]), */
-                Textarea::make('description')
-                    ->rows(5)
-                    ->cols(20)
+                Forms\Components\Select::make('unit_id')
+                    ->relationship('unit', 'name')
+                    ->required(),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('code')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('quantity')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('buying_price')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('selling_price')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('quantity_alert')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('tax')
+                    ->numeric(),
+                Forms\Components\Toggle::make('tax_type'),
+                Forms\Components\Textarea::make('notes')
+                    ->maxLength(65535)
+                    ->columnSpanFull(),
+                Forms\Components\FileUpload::make('product_image')
+                    ->image(),
             ]);
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('product_name'),
-                TextColumn::make('category_id'),
-                TextColumn::make('buying_price'),
-                TextColumn::make('selling_price'),
-                TextColumn::make('stock'),
-                TextColumn::make('unit_id'),
-                ImageColumn::make('product_image')
+                Tables\Columns\TextColumn::make('category.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('unit.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('code')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('buying_price')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('selling_price')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('quantity_alert')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('tax')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('tax_type')
+                    ->boolean(),
+                Tables\Columns\ImageColumn::make('product_image'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                /* Tables\Actions\ViewAction::make(), */
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -107,6 +128,7 @@ class ProductResource extends Resource
         return [
             'index' => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProduct::route('/create'),
+            'view' => Pages\ViewProduct::route('/{record}'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }

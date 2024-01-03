@@ -2,14 +2,19 @@
 
 namespace App\Providers\Filament;
 
-use BladeUI\Icons\Components\Icon;
+use App\Filament\Resources\ProductResource;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Enums\ThemeMode;
+use Filament\Navigation\MenuItem;
+use BladeUI\Icons\Components\Icon;
 use Filament\Support\Colors\Color;
+use Filament\Navigation\NavigationItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
+use Filament\Navigation\NavigationBuilder;
 use Filament\FontProviders\GoogleFontProvider;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -18,7 +23,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
@@ -28,29 +32,35 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('dashboard')
+            ->path('dashboard')
             ->login()
             ->colors([
                 'primary' => Color::Indigo
             ])
             ->font('Source Code Pro', provider: GoogleFontProvider::class)
-            ->brandLogo(asset('/logo.png'))
+            ->brandLogo(asset('/logo.svg'))
             ->brandLogoHeight('5rem')
             ->darkMode(false)
-            ->sidebarCollapsibleOnDesktop()
+            ->favicon('/favicon.ico')
+            ->sidebarFullyCollapsibleOnDesktop()
+            /* ->topNavigation() */
             /* ->databaseNotifications() */
             ->defaultThemeMode(ThemeMode::Light)
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Settings')
-                    ->icon('heroicon-o-cog-8-tooth')
+                    /* ->url(fn (): string => Settings::getUrl()) */
+                    ->icon('heroicon-o-cog-6-tooth'),
+                'profile' => MenuItem::make()->label('Edit profile'),
+                'logout' => MenuItem::make()->label('Log out')
             ])
+            ->breadcrumbs(false)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            /* ->pages([
+            ->pages([
                 Pages\Dashboard::class,
-            ]) */
+            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
