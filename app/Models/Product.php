@@ -35,6 +35,7 @@ class Product extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'tax_type' => TaxType::class
     ];
 
     public function getRouteKeyName(): string
@@ -52,7 +53,7 @@ class Product extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    /* protected function buyingPrice(): Attribute
+    protected function buyingPrice(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,
@@ -72,5 +73,5 @@ class Product extends Model
     {
         $query->where('name', 'like', "%{$value}%")
             ->orWhere('code', 'like', "%{$value}%");
-    } */
+    }
 }

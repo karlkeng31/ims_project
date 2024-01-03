@@ -30,7 +30,7 @@ class Unit extends Model
         return $this->hasMany(Product::class);
     }
 
-    /* public function scopeSearch($query, $value): void
+    public function scopeSearch($query, $value): void
     {
         $query->where('name', 'like', "%{$value}%")
             ->orWhere('slug', 'like', "%{$value}%")
@@ -40,5 +40,5 @@ class Unit extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
-    } */
+    }
 }
