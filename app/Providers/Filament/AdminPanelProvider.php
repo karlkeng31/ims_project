@@ -32,8 +32,8 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('dashboard')
-            ->path('dashboard')
+            ->id('admin')
+            ->path('admin')
             ->login()
             ->colors([
                 'primary' => Color::Indigo
@@ -41,12 +41,12 @@ class AdminPanelProvider extends PanelProvider
             ->font('Source Code Pro', provider: GoogleFontProvider::class)
             ->brandLogo(asset('/logo.svg'))
             ->brandLogoHeight('5rem')
-            ->darkMode(false)
+            /* ->darkMode(false) */
             ->favicon('/favicon.ico')
             ->sidebarFullyCollapsibleOnDesktop()
             /* ->topNavigation() */
             /* ->databaseNotifications() */
-            ->defaultThemeMode(ThemeMode::Light)
+            /* ->defaultThemeMode(ThemeMode::Light) */
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Settings')
