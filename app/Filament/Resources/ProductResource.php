@@ -66,33 +66,33 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('category.name')
-                    ->numeric()
+                    ->numeric()->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('unit.name')
-                    ->numeric()
+                    ->numeric()->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('name')->searchable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
+                Tables\Columns\TextColumn::make('slug')->searchable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('code')
+                Tables\Columns\TextColumn::make('code')->searchable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('quantity')
-                    ->numeric()
+                    ->numeric()->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('buying_price')
-                    ->numeric()
+                    ->numeric()->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('selling_price')
-                    ->numeric()
+                    ->numeric()->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quantity_alert')
-                    ->numeric()
+                    ->numeric()->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tax')
-                    ->numeric()
+                    ->numeric()->searchable()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('tax_type')
+                Tables\Columns\IconColumn::make('tax_type')->searchable()
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('product_image'),
                 Tables\Columns\TextColumn::make('created_at')
