@@ -25,11 +25,6 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'name'),
-                Forms\Components\Select::make('unit_id')
-                    ->relationship('unit', 'name')
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -57,7 +52,13 @@ class ProductResource extends Resource
                     ->maxLength(65535)
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('product_image')
-                    ->image(),
+                    ->image()
+                    ->imageEditor(),
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name'),
+                Forms\Components\Select::make('unit_id')
+                    ->relationship('unit', 'name')
+                    ->required(),
             ]);
     }
 
@@ -65,12 +66,6 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('category.name')
-                    ->numeric()->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('unit.name')
-                    ->numeric()->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')->searchable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')->searchable()
@@ -95,6 +90,12 @@ class ProductResource extends Resource
                 Tables\Columns\IconColumn::make('tax_type')->searchable()
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('product_image'),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->numeric()->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('unit.name')
+                    ->numeric()->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

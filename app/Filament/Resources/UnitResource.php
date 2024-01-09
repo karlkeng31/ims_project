@@ -29,8 +29,6 @@ class UnitResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('short_code')
-                    ->maxLength(255),
             ]);
     }
 
@@ -41,8 +39,6 @@ class UnitResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('short_code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -56,10 +52,10 @@ class UnitResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            /* ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
+            ]) */
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -78,9 +74,9 @@ class UnitResource extends Resource
     {
         return [
             'index' => Pages\ListUnits::route('/'),
-            'create' => Pages\CreateUnit::route('/create'),
+            /* 'create' => Pages\CreateUnit::route('/create'),
             'view' => Pages\ViewUnit::route('/{record}'),
-            'edit' => Pages\EditUnit::route('/{record}/edit'),
+            'edit' => Pages\EditUnit::route('/{record}/edit'), */
         ];
     }
 }

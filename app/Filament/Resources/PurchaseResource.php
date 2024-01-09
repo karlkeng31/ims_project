@@ -26,9 +26,6 @@ class PurchaseResource extends Resource
                 Forms\Components\Select::make('supplier_id')
                     ->relationship('supplier', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('date')
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('purchase_no')
                     ->required()
                     ->maxLength(255),

@@ -26,7 +26,7 @@ class SupplierFactory extends Factory
             'photo' => fake()->image(),
             'account_holder' => fake()->randomNumber(5),
             'account_number' => fake()->randomNumber(5),
-            'bank_name' => fake()->randomNumber(5),
+            'bank_name' => fake()->company(),
         ];
     }
 }

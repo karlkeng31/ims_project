@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SupplierResource\Pages;
 use App\Filament\Resources\SupplierResource\RelationManagers;
+use App\Models\Category;
 use App\Models\Supplier;
+use App\Models\Unit;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -35,10 +37,13 @@ class SupplierResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('shopname')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('type')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('photo')
-                    ->maxLength(255),
+                Forms\Components\Select::make('unit_id')
+                    ->label('Type')
+                    ->options(Unit::all()->pluck('name', 'id'))
+                    ->searchable(),
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->imageEditor(),
                 Forms\Components\TextInput::make('account_holder')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('account_number')

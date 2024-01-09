@@ -24,7 +24,7 @@ class CustomerFactory extends Factory
             'photo' => fake()->image(),
             'account_holder' => fake()->randomNumber(),
             'account_number' => fake()->randomNumber(),
-            'bank_name' => fake()->name(),
+            'bank_name' => fake()->company(),
         ];
     }
 }

@@ -25,18 +25,20 @@ return new class extends Migration
             $table->integer('tax')->nullable();
             $table->tinyInteger('tax_type')->nullable();
             $table->text('notes')->nullable();
-
             $table->string('product_image')->nullable();
-
-            $table->foreignIdFor(\App\Models\Category::class)
+            $table->foreignId('category_id')
                 ->nullable()
-                ->constrained()
-//                ->restrictOnDelete();
-//                ->cascadeOnDelete();
+                ->constrained('categories')
+                ->restrictOnDelete()
+                ->cascadeOnDelete()
                 ->nullOnDelete();
 
-            $table->foreignIdFor(\App\Models\Unit::class)->constrained()
-                ->cascadeOnDelete();
+            $table->foreignId('unit_id')
+                ->nullable()
+                ->constrained('units')
+                ->restrictOnDelete()
+                ->cascadeOnDelete()
+                ->nullOnDelete();
             $table->timestamps();
         });
     }

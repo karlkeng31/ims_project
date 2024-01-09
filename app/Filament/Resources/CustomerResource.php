@@ -35,11 +35,13 @@ class CustomerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('address')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('photo')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->imageEditor(),
                 Forms\Components\TextInput::make('account_holder')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('account_number')
+                    ->numeric()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('bank_name')
                     ->maxLength(255),
