@@ -36,17 +36,14 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Indigo
+                'primary' => Color::Emerald
             ])
             ->font('Source Code Pro', provider: GoogleFontProvider::class)
             ->brandLogo(asset('/logo.svg'))
             ->brandLogoHeight('5rem')
-            /* ->darkMode(false) */
             ->favicon('/favicon.ico')
             ->sidebarFullyCollapsibleOnDesktop()
-            /* ->topNavigation() */
-            /* ->databaseNotifications() */
-            /* ->defaultThemeMode(ThemeMode::Light) */
+            ->databaseNotifications()
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Settings')
