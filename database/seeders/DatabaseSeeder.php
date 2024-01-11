@@ -19,15 +19,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-
-            /* CategorySeeder::class,
-            UnitSeeder::class,
-            ProductSeeder::class */
+            CategorySeeder::class,
         ]);
 
         Customer::factory(100)->create();
         Supplier::factory(100)->create();
-
-        // $this->call([UserSeeder::class]);
     }
 }
