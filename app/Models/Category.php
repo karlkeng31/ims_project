@@ -29,15 +29,4 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
-
-    public function scopeSearch($query, $value): void
-    {
-        $query->where('name', 'like', "%{$value}%")
-            ->orWhere('slug', 'like', "%{$value}%");
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
 }

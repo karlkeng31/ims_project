@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('phone')->unique()->nullable();
-            $table->string('address')->nullable();
             $table->string('photo')->nullable();
             $table->string('account_holder')->nullable();
             $table->string('account_number')->nullable();
             $table->string('bank_name')->nullable();
+            $table->string('address');
+            $table->string('zip_code');
+            $table->string('city');
             $table->timestamps();
         });
     }

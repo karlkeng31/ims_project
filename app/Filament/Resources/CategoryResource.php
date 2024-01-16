@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Models\Category;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Category;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\CategoryResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CategoryResource\RelationManagers;
 
 class CategoryResource extends Resource
 {
@@ -23,12 +24,24 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Section::make()->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                            if ($operation !== 'create') {
+                                return;
+                            }
+
+                            $set('slug', Str::slug($state));
+                        })
+                        ->unique(),
+                    Forms\Components\TextInput::make('slug')
+                        ->required()
+                        ->disabled()
+                        ->dehydrated()
+                        ->unique(Category::class, 'slug', ignoreRecord: true),
+                ])->columns(2),
             ]);
     }
 
@@ -37,23 +50,16 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -74,9 +80,8 @@ class CategoryResource extends Resource
     {
         return [
             'index' => Pages\ListCategories::route('/'),
-            /* 'create' => Pages\CreateCategory::route('/create'),
-            'view' => Pages\ViewCategory::route('/{record}'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'), */
+            'create' => Pages\CreateCategory::route('/create'),
+            'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
 }

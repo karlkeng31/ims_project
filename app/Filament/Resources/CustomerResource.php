@@ -18,33 +18,53 @@ class CustomerResource extends Resource
     protected static ?string $model = Customer::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationGroup = 'User Management';
-    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('phone')
-                    ->tel()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('address')
-                    ->maxLength(255),
-                Forms\Components\FileUpload::make('photo')
-                    ->image()
-                    ->imageEditor(),
-                Forms\Components\TextInput::make('account_holder')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('account_number')
-                    ->numeric()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('bank_name')
-                    ->maxLength(255),
+
+                Forms\Components\Group::make()->schema([
+                    Forms\Components\Section::make('Image')->schema([
+                        Forms\Components\FileUpload::make('photo')
+                            ->image()
+                            ->imageEditor()
+                            ->preserveFilenames()
+                            ->disk('public')
+                            ->directory('customer-images')
+                            ->nullable(),
+                    ])->collapsible(),
+
+                    Forms\Components\Section::make()->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->unique(),
+                        Forms\Components\TextInput::make('phone')
+                            ->tel(),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->unique()
+                            ->required()
+                            ->columnSpanFull(),
+                    ])->columns(2),
+                ]),
+
+                Forms\Components\Group::make()->schema([
+                    Forms\Components\Section::make('Bank Account Information')->schema([
+                        Forms\Components\TextInput::make('account_holder'),
+                        Forms\Components\TextInput::make('account_number'),
+                        Forms\Components\TextInput::make('bank_name')->columnSpanFull(),
+                    ])->columns(2),
+
+                    Forms\Components\Section::make('Additional Information')->schema([
+                        Forms\Components\TextInput::make('address')
+                            ->required(),
+                        Forms\Components\TextInput::make('zip_code')
+                            ->required(),
+                        Forms\Components\TextInput::make('city')
+                            ->required(),
+                    ]),
+                ]),
             ]);
     }
 
@@ -53,20 +73,31 @@ class CustomerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('photo')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('account_holder')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('account_number')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('bank_name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('photo')
+                Tables\Columns\TextColumn::make('zip_code')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('account_holder')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('account_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('bank_name')
+                Tables\Columns\TextColumn::make('city')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -81,7 +112,6 @@ class CustomerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -103,7 +133,6 @@ class CustomerResource extends Resource
         return [
             'index' => Pages\ListCustomers::route('/'),
             'create' => Pages\CreateCustomer::route('/create'),
-            'view' => Pages\ViewCustomer::route('/{record}'),
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }

@@ -38,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald
             ])
-            ->font('Source Code Pro', provider: GoogleFontProvider::class)
+            ->font('Roboto Mono', provider: GoogleFontProvider::class)
             ->brandLogo(asset('/logo.svg'))
             ->brandLogoHeight('5rem')
             ->favicon('/favicon.ico')

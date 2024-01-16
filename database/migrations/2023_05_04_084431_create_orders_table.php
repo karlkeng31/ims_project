@@ -13,19 +13,15 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Customer::class)
-                ->constrained();
+            $table->foreignId('customer_id')
+                ->constrained('customers')
+                ->cascadeOnDelete();
             $table->string('order_date');
-            $table->tinyInteger('order_status')
-                ->comment('0 - Pending / 1 - Complete');
-            $table->integer('total_products');
-            $table->integer('sub_total');
-            $table->integer('vat');
-            $table->integer('total');
-            $table->string('invoice_no');
-            $table->string('payment_type');
-            $table->integer('pay');
-            $table->integer('due');
+            $table->enum('order_status', ['pending', 'processing', 'completed', 'declined'])
+                ->default('pending');
+            $table->decimal('total_price');
+            $table->decimal('shipping_price')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

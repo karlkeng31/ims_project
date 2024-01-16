@@ -52,10 +52,4 @@ class Purchase extends Model
     {
         return $this->hasMany(PurchaseDetails::class);
     }
-
-    public function scopeSearch($query, $value): void
-    {
-        $query->where('purchase_no', 'like', "%{$value}%")
-            ->orWhere('status', 'like', "%{$value}%");
-    }
 }
