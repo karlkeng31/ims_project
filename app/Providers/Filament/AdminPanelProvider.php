@@ -38,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald
             ])
-            ->font('Roboto Mono', provider: GoogleFontProvider::class)
+            ->font('Quicksand', provider: GoogleFontProvider::class)
             ->brandLogo(asset('/logo.svg'))
             ->brandLogoHeight('5rem')
             ->favicon('/favicon.ico')
@@ -60,9 +60,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
+                /* Widgets\AccountWidget::class,
+                Widgets\FilamentInfoWidget::class, */])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

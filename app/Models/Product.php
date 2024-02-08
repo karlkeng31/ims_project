@@ -2,52 +2,37 @@
 
 namespace App\Models;
 
-use App\Enums\TaxType;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
-
-    public $fillable = [
+    protected $fillable = [
+        'brand_id',
         'name',
         'slug',
-        'code',
+        'sku',
+        'image',
+        'description',
         'quantity',
-        'quantity_alert',
-        'buying_price',
-        'selling_price',
-        'notes',
-        'product_image',
-        'category_id',
-        'unit_id',
-        'created_at',
-        'updated_at'
+        'price',
+        'is_visible',
+        'is_featured',
+        'type',
+        'published_at',
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'tax_type' => TaxType::class
-    ];
-
-    public function getRouteKeyName(): string
+    public function brand(): BelongsTo
     {
-        return 'slug';
+        return $this->belongsTo(Brand::class);
     }
 
-    public function category(): BelongsTo
+    public function categories(): BelongsToMany
     {
-        return $this->belongsTo(Category::class);
-    }
-
-    public function unit(): BelongsTo
-    {
-        return $this->belongsTo(Unit::class);
+        return $this->belongsToMany(Category::class);
     }
 }

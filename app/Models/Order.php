@@ -2,29 +2,23 @@
 
 namespace App\Models;
 
-use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
-    protected $guarded = [
-        'id',
-    ];
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'customer_id',
-        'order_date',
-        'order_status',
+        'number',
         'total_price',
+        'status',
         'shipping_price',
-    ];
-
-    protected $casts = [
-        'order_date'    => 'date',
-        'created_at'    => 'datetime',
-        'updated_at'    => 'datetime',
+        'notes',
     ];
 
     public function customer(): BelongsTo

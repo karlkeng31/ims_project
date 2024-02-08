@@ -17,26 +17,36 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'Laptops',
                 'slug' => 'laptops',
+                'parent_id' => null,
+                'is_visible' => true,
                 'created_at' => now()
             ],
             [
                 'name' => 'Smartphones',
                 'slug' => 'smartphones',
+                'parent_id' => null,
+                'is_visible' => true,
                 'created_at' => now()
             ],
             [
                 'name' => 'Speakers',
                 'slug' => 'speakers',
+                'parent_id' => null,
+                'is_visible' => true,
                 'created_at' => now()
             ],
             [
                 'name' => 'Computers',
                 'slug' => 'computers',
+                'parent_id' => null,
+                'is_visible' => true,
                 'created_at' => now()
             ],
             [
                 'name' => 'Televisions',
                 'slug' => 'televisions',
+                'parent_id' => null,
+                'is_visible' => true,
                 'created_at' => now()
             ]
         ]);

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,21 +19,18 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->n,
-            'slug',
-            'code',
-            'quantity',
-            'quantity_alert',
-            'buying_price',
-            'selling_price',
-            'tax',
-            'tax_type',
-            'notes',
-            'product_image',
-            'category_id',
-            'unit_id',
-            'created_at',
-            'updated_at'
+            'brand_id' => fake()->randomElement([1, 2, 3, 4, 5]),
+            'name' => fake()->words(2, true),
+            'slug' => null,
+            'sku' => null,
+            'image' => fake()->imageUrl(300, 300),
+            'description' => fake()->words(10, true),
+            'quantity' => fake()->randomNumber(2),
+            'price' => fake()->randomElement([10000, 20000, 30000, 40000, 50000]),
+            'is_visible' => fake()->boolean(),
+            'is_featured' => fake()->boolean(),
+            'type' => fake()->randomElement(['deliverable', 'downloadable']),
+            'published_at' => now(),
         ];
     }
 }

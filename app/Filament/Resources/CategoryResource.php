@@ -19,29 +19,47 @@ class CategoryResource extends Resource
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $activeNavigationIcon = 'heroicon-s-tag';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make()->schema([
-                    Forms\Components\TextInput::make('name')
-                        ->required()
-                        ->live(onBlur: true)
-                        ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                            if ($operation !== 'create') {
-                                return;
-                            }
+                Forms\Components\Group::make()->schema([
+                    Forms\Components\Section::make()->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                                if ($operation !== 'create') {
+                                    return;
+                                }
 
-                            $set('slug', Str::slug($state));
-                        })
-                        ->unique(),
-                    Forms\Components\TextInput::make('slug')
-                        ->required()
-                        ->disabled()
-                        ->dehydrated()
-                        ->unique(Category::class, 'slug', ignoreRecord: true),
-                ])->columns(2),
+                                $set('slug', Str::slug($state));
+                            })
+                            ->unique(),
+                        Forms\Components\TextInput::make('slug')
+                            ->required()
+                            ->disabled()
+                            ->dehydrated()
+                            ->unique(Category::class, 'slug', ignoreRecord: true),
+                        Forms\Components\Textarea::make('description')
+                            ->nullable()
+                            ->columnSpanFull(),
+                    ])->columns(2),
+                ]),
+
+                Forms\Components\Group::make()->schema([
+                    Forms\Components\Section::make('Status')->schema([
+                        Forms\Components\Toggle::make('is_visible')
+                            ->required()
+                            ->label('Visibility')
+                            ->helperText('Enable or disable category visibility')
+                            ->default(true),
+                        Forms\Components\Select::make('parent_id')
+                            ->relationship('parent', 'name')
+                    ])->columns(2),
+                ])
             ]);
     }
 
@@ -52,15 +70,28 @@ class CategoryResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
+                Tables\Columns\TextColumn::make('parent.name')
+                    ->label('Parent')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\IconColumn::make('is_visible')
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: false),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->date()
+                    ->sortable()
+                    ->label('Updated Date')
+                    ->toggleable(isToggledHiddenByDefault: false)
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -72,7 +103,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ProductsRelationManager::class
         ];
     }
 

@@ -2,24 +2,37 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Enums\OrderStatusEnum;
+use App\Filament\Resources\OrderResource\Pages;
+use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
 use App\Models\Product;
+use Filament\Forms;
 use Filament\Forms\Form;
-use App\Enums\OrderStatus;
-use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\OrderResource\RelationManagers;
 
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static ?string $activeNavigationIcon = 'heroicon-s-shopping-bag';
+    protected static ?int $navigationSort = 4;
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', '=', 'processing')->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::where('status', '=', 'processing')->count() > 10
+            ? 'warning' : 'primary';
+    }
 
     public static function form(Form $form): Form
     {
@@ -36,13 +49,19 @@ class OrderResource extends Resource
                             Forms\Components\Select::make('customer_id')
                                 ->relationship('customer', 'name')
                                 ->required(),
-                            Forms\Components\Select::make('order_status')
+                            Forms\Components\TextInput::make('shipping_price')
+                                ->label('Shipping Costs')
+                                ->numeric()
+                                ->dehydrated()
+                                ->required(),
+                            Forms\Components\Select::make('type')
                                 ->options([
-                                    'pending' => OrderStatus::PENDING->value,
-                                    'processing' => OrderStatus::PROCESSING->value,
-                                    'completed' => OrderStatus::COMPLETED->value,
-                                    'declined' => OrderStatus::DECLINED->value
+                                    'pending' => OrderStatusEnum::PENDING->value,
+                                    'processing' => OrderStatusEnum::PROCESSING->value,
+                                    'completed' => OrderStatusEnum::COMPLETED->value,
+                                    'declined' => OrderStatusEnum::DECLINED->value
                                 ]),
+                            Forms\Components\Textarea::make('notes')
                         ])->columns(2),
 
                     Forms\Components\Wizard\Step::make('Order Items')
@@ -83,7 +102,20 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('number')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('customer.name')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Order Date')
+                    ->date()
+                    ->sortable(),
             ])
             ->filters([
                 //

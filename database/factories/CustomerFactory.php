@@ -19,12 +19,12 @@ class CustomerFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->phoneNumber(),
+            'phone' => fake()->unique()->phoneNumber(),
+            'date_of_birth' => fake()->date(),
             'address' => fake()->address(),
-            'photo' => fake()->image(),
-            'account_holder' => fake()->randomNumber(),
-            'account_number' => fake()->randomNumber(),
-            'bank_name' => fake()->company(),
+            'zip_code' => fake()->randomNumber(4, true),
+            'city' => fake()->city(),
+            'bank_name' => fake()->randomElement(['BDO', 'Metrobank', 'BPI', 'Landbank', 'PNB', 'DBP', 'RCBC', 'PSBank', 'UCPB', 'AUB']),
         ];
     }
 }
